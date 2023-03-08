@@ -1,0 +1,63 @@
+#! /usr/bin/env node
+console.log('lxm-cli用lxm运行这个文件')
+//  我们要实现 脚手架 先做一个命令行交互的功能
+// 配置可执行命令 commander
+const program = require('commander')
+const chalk = require('chalk');
+
+
+
+console.log(chalk.blue('Hello world!'));
+// const cleanArgs = (cmd) => {
+//   console.log(cmd)
+//   const args = {}
+  // cmd.option.forEach(o => {
+  //   console.log(o)
+  //   const key = o.long.slice(2)
+  //   if(cmd[key]) args[key] = cmd[key]
+  // })
+  // return args
+// }
+// 创建项目 更改配置文件  ui界面
+program
+.command('create <app-name>')
+.description('create a new project')
+.option('-f, --force', 'overwrite target directory if it exists')
+.action((name, cmd) => {
+  console.log('调用create模块执行',name,cmd)  //我需要提取这个cmd中的属性
+  require('../lib/create')(name, cmd)
+})
+
+program
+.command(`config [value]`)
+.description('inspect and modify the config')
+.option('-g, --get <path>', 'get value from option')// lxm config -g a
+.option('-s, -set <path> <value>')//lxm config -s a
+.option('-d, --delete <path>', 'delete option from config')// lxm config -d a
+.action((value,cmd) => {
+  console.log('调用config模块执行',value,cmd)  //我需要提取这个cmd中的属性
+})
+
+program
+.command('ui')
+.description('start and open lxm-cli ui')
+.option('-p, --port <port>', 'Port used for the UI server')
+.action(cmd => {
+  console.log('调用ui模块执行',cmd)
+})
+program
+.version(`lxm-cli ${require('../package.json').version}`)// 拿到版本号
+.usage(`<command> [option]`)
+
+program.on('--help', function() {
+  console.log(`Run ${chalk.blue('lxm-cli <command> --help')} show details`)
+})
+// 解析用户执行命令传入的参数
+program.parse(process.argv) //lxm create xxx  这里lxm后面就是命令传入的参数
+
+
+// 实现交互功能 inquirer
+// 将模版下载下来 download-git-repo
+// 根据用户的选择动态的生成内容 metalsmith
+
+// 18. 安装commander `npm install commander`
